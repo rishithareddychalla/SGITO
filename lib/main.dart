@@ -14,64 +14,9 @@ import 'package:phone_state/phone_state.dart';
 
 import 'contacts_screen.dart';
 import 'calling_screen.dart';
+import 'emergency_contacts.dart';
 
 // --- State Management ---
-
-final contactsProvider =
-    StateNotifierProvider<
-      ContactsNotifier,
-      AsyncValue<List<Map<String, String>>>
-    >((ref) {
-      final notifier = ContactsNotifier();
-      notifier._initialize();
-      return notifier;
-    });
-
-class ContactsNotifier
-    extends StateNotifier<AsyncValue<List<Map<String, String>>>> {
-  ContactsNotifier() : super(const AsyncValue.loading());
-  Future<void> _initialize() async => await _loadContacts();
-
-  Future<void> _loadContacts() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final contactsJson = prefs.getString('contacts');
-      if (contactsJson != null) {
-        final decoded = json.decode(contactsJson) as List;
-        state = AsyncValue.data(
-          decoded.map((item) => Map<String, String>.from(item)).toList(),
-        );
-      } else {
-        state = const AsyncValue.data([]);
-      }
-    } catch (e, stack) {
-      state = AsyncValue.error(e, stack);
-    }
-  }
-
-  Future<void> addContact(String name, String phone) async {
-    final currentContacts = state.value ?? [];
-    state = AsyncValue.data([
-      ...currentContacts,
-      {'name': name, 'phone': phone},
-    ]);
-    await _saveContacts();
-  }
-
-  Future<void> deleteContact(int index) async {
-    final currentContacts = state.value ?? [];
-    if (index >= 0 && index < currentContacts.length) {
-      final newContacts = List.from(currentContacts)..removeAt(index);
-      state = AsyncValue.data(newContacts.cast<Map<String, String>>());
-      await _saveContacts();
-    }
-  }
-
-  Future<void> _saveContacts() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('contacts', json.encode(state.value ?? []));
-  }
-}
 
 final sequentialCallProvider =
     StateNotifierProvider<SequentialCallNotifier, List<String>>((ref) {
@@ -202,7 +147,6 @@ class MainScreen extends ConsumerWidget {
       Permission.sms,
       Permission.location,
       Permission.phone,
-      Permission.contacts,
     ];
     Map<Permission, PermissionStatus> statuses = await permissions.request();
     bool allGranted = true;
@@ -245,13 +189,8 @@ class MainScreen extends ConsumerWidget {
   }
 
   Future<void> _handleSOS(BuildContext context, WidgetRef ref) async {
-    final contactList = ref.read(contactsProvider).value ?? [];
-    if (contactList.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No emergency contacts added!')),
-      );
-      return;
-    }
+    final phoneNumbers =
+        emergencyContacts.map((c) => c['phone']!).toList();
 
     final hasPermissions = await _requestPermissions(context);
     if (!hasPermissions) return;
@@ -260,7 +199,6 @@ class MainScreen extends ConsumerWidget {
       final position = await _determinePosition();
       final locationMessage =
           "Emergency! I need help. My current location is: https://www.google.com/maps/search/?api=1&query=${position.latitude},${position.longitude}";
-      final phoneNumbers = contactList.map((c) => c['phone']!).toList();
 
       final telephony = Telephony.instance;
       for (var number in phoneNumbers) {

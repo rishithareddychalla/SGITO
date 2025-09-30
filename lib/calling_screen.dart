@@ -9,19 +9,6 @@ class CallingScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final remainingNumbers = ref.watch(sequentialCallProvider);
-    final allContacts = ref.watch(contactsProvider).value ?? [];
-
-    String statusText;
-    if (remainingNumbers.isNotEmpty) {
-      final currentNumber = remainingNumbers.first;
-      final contactName = allContacts.firstWhere(
-        (c) => c['phone'] == currentNumber,
-        orElse: () => {'name': 'Unknown'},
-      )['name'];
-      statusText = 'Calling $contactName'; //...\n($currentNumber)
-    } else {
-      statusText = 'Finished calling all emergency contacts.';
-    }
 
     return WillPopScope(
       onWillPop: () async => false,
@@ -100,8 +87,8 @@ class CallingScreen extends ConsumerWidget {
                     const SizedBox(height: 10),
                     (remainingNumbers.isNotEmpty)
                         ? Column(
-                            children: const [
-                              Text(
+                            children: [
+                              const Text(
                                 'SOS is active.',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -110,11 +97,11 @@ class CallingScreen extends ConsumerWidget {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(height: 8), // spacing
+                              const SizedBox(height: 8), // spacing
                               Text(
-                                'We are seeking help',
+                                'Calling ${remainingNumbers.first}...',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 20,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
