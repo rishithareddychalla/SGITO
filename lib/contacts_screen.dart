@@ -17,7 +17,7 @@ class ContactsScreen extends StatelessWidget {
           'Emergency Numbers',
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
-        backgroundColor: const Color(0xFFFB51963),
+        backgroundColor: const Color(0XFFF52324A),
       ),
       body: Column(
         children: [
@@ -46,7 +46,7 @@ class ContactsScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 20),
             child: Image.asset(
-              'assets/images/logo_pink.png', // place your logo file here
+              'assets/images/sgito_360.png', // place your logo file here
               height: 60, // adjust size
             ),
           ),

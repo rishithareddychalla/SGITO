@@ -15,11 +15,11 @@ class CallingScreen extends ConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor: const Color(0xFFFB51963),
+          backgroundColor: const Color(0XFFF52324A),
         ),
         body: SafeArea(
           child: Container(
-            decoration: const BoxDecoration(color: Color(0xFFFB51963)),
+            decoration: const BoxDecoration(color: Color(0XFFF52324A)),
             child: Center(
               child: SizedBox(
                 width: double.infinity,
@@ -36,7 +36,7 @@ class CallingScreen extends ConsumerWidget {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: const Color(
-                              0xFFF821949,
+                              0xFF805C75,
                             ).withOpacity(0.3), // faint background
                           ),
                         ),
@@ -75,7 +75,7 @@ class CallingScreen extends ConsumerWidget {
                               style: TextStyle(
                                 fontSize: 48,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFFFB51963),
+                                color: Color(0XFFF52324A),
                               ),
                             ),
                           ),
@@ -133,7 +133,7 @@ class CallingScreen extends ConsumerWidget {
                               : 'Return to Home',
                           style: const TextStyle(
                             fontSize: 18,
-                            color: Color(0xFFFB51963),
+                            color: Color(0XFFF52324A),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -144,7 +144,7 @@ class CallingScreen extends ConsumerWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 20),
                       child: Image.asset(
-                        'assets/images/logo_white.png', // place your logo file here
+                        'assets/images/sgito_360.png', // place your logo file here
                         height: 60, // adjust size
                       ),
                     ),

@@ -124,7 +124,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'SOS',
       theme: ThemeData(
-        
         textTheme: const TextTheme(
           headlineMedium: TextStyle(
             fontSize: 48,
@@ -143,11 +142,7 @@ class MainScreen extends ConsumerWidget {
   const MainScreen({super.key});
 
   Future<bool> _requestPermissions(BuildContext context) async {
-    final permissions = [
-      Permission.sms,
-      Permission.location,
-      Permission.phone,
-    ];
+    final permissions = [Permission.sms, Permission.location, Permission.phone];
     Map<Permission, PermissionStatus> statuses = await permissions.request();
     bool allGranted = true;
     statuses.forEach((permission, status) {
@@ -189,8 +184,7 @@ class MainScreen extends ConsumerWidget {
   }
 
   Future<void> _handleSOS(BuildContext context, WidgetRef ref) async {
-    final phoneNumbers =
-        emergencyContacts.map((c) => c['phone']!).toList();
+    final phoneNumbers = emergencyContacts.map((c) => c['phone']!).toList();
 
     final hasPermissions = await _requestPermissions(context);
     if (!hasPermissions) return;
@@ -227,10 +221,10 @@ class MainScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Image.asset(
-          'assets/images/logo_white.png', // your logo path
+          'assets/images/sgito_360.png', // your logo path
           height: 30, // adjust as needed
         ),
-        backgroundColor: const Color(0xFFFB51963),
+        backgroundColor: const Color(0xFFF52324A),
         actions: [
           IconButton(
             icon: const Icon(Icons.contacts, color: Colors.white),
@@ -254,7 +248,7 @@ class MainScreen extends ConsumerWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: const Color(
-                        0xFFFF8A9D9,
+                        0xFFBFA7C2,
                       ).withOpacity(0.3), // faint background
                     ),
                   ),
@@ -266,7 +260,7 @@ class MainScreen extends ConsumerWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: const Color(
-                        0xFFFD92981,
+                        0xFF805C75,
                       ).withOpacity(0.6), // darker ring
                     ),
                   ),
@@ -281,8 +275,8 @@ class MainScreen extends ConsumerWidget {
                         center: Alignment.center,
                         radius: 0.8,
                         colors: [
-                          Color(0xFFFD92981), // lighter / inner
-                          Color(0xFFF9B1955), // darker / outer
+                          Color(0xFF52324A), // lighter / inner
+                          Color(0xFF805C75), // darker / outer
                         ],
                         stops: [0.3, 1.0],
                       ),
@@ -313,7 +307,7 @@ class MainScreen extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 20),
               child: Image.asset(
-                'assets/images/logo_pink.png', // place your logo file here
+                'assets/images/sgito_360.png', // place your logo file here
                 height: 60, // adjust size
               ),
             ),
