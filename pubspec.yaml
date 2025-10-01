@@ -66,18 +66,18 @@ dev_dependencies:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/company_logo.png"
+  image_path: "assets/images/sgito_360.png"
 
 
 
 flutter_native_splash:
   # Base (light mode)
   color: "#D92981"                   # pink background
-  image: assets/images/logo_pink.png # centered logo
+  image: assets/images/sgito_360.png # centered logo
 
   # Dark mode (prevents black screen on dark theme devices)
   color_dark: "#D92981"
-  image_dark: assets/images/logo_pink.png
+  image_dark: assets/images/sgito_360.png
 
   # Platforms
   android: true
@@ -91,7 +91,7 @@ flutter_native_splash:
   # Android 12+ explicit config (required for consistent behavior)
   android_12:
     color: "#D92981"
-    image: assets/images/mainlogo.png
+    image: assets/images/sgito_360.png
     # You can also add `icon_background_color` if your image needs it
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
