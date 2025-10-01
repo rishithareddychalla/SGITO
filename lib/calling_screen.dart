@@ -8,7 +8,7 @@ class CallingScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final remainingNumbers = ref.watch(sequentialCallProvider);
+    final remainingContacts = ref.watch(sequentialCallProvider);
 
     return WillPopScope(
       onWillPop: () async => false,
@@ -85,7 +85,7 @@ class CallingScreen extends ConsumerWidget {
                     const SizedBox(height: 10),
 
                     const SizedBox(height: 10),
-                    (remainingNumbers.isNotEmpty)
+                    (remainingContacts.isNotEmpty)
                         ? Column(
                             children: [
                               const Text(
@@ -99,7 +99,7 @@ class CallingScreen extends ConsumerWidget {
                               ),
                               const SizedBox(height: 8), // spacing
                               Text(
-                                'Calling ${remainingNumbers.first}...',
+                                'Calling ${remainingContacts.first['name']}...',
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                   fontSize: 20,
@@ -128,7 +128,7 @@ class CallingScreen extends ConsumerWidget {
                         },
                         // ... (rest of button is the same)
                         child: Text(
-                          remainingNumbers.isNotEmpty
+                          remainingContacts.isNotEmpty
                               ? 'Stop SOS'
                               : 'Return to Home',
                           style: const TextStyle(
