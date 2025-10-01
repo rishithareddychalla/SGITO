@@ -1,3 +1,14 @@
+import java.util.Properties
+import java.io.FileInputStream
+
+val keystorePropertiesFile = rootProject.file("key.properties")
+val keystoreProperties = Properties()
+
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
+
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -9,6 +20,9 @@ android {
     namespace = "com.beep.sos"
     compileSdk = 36
     ndkVersion = "27.0.12077973"
+
+
+
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -31,26 +45,23 @@ android {
     }
     
 
-     signingConfigs {
-        create("release") {
-            storeFile = file(project.property("MYAPP_UPLOAD_STORE_FILE") as String)
-            storePassword = project.property("MYAPP_UPLOAD_STORE_PASSWORD") as String
-            keyAlias = project.property("MYAPP_UPLOAD_KEY_ALIAS") as String
-            keyPassword = project.property("MYAPP_UPLOAD_KEY_PASSWORD") as String
-        }
+         signingConfigs {
+    create("release") {
+        keyAlias = keystoreProperties["keyAlias"] as String
+        keyPassword = keystoreProperties["keyPassword"] as String
+        storeFile = file(keystoreProperties["storeFile"] as String)
+        storePassword = keystoreProperties["storePassword"] as String
     }
+}
 
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-            isShrinkResources = false
-            signingConfig = signingConfigs.getByName("release")
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
+buildTypes {
+    getByName("release") {
+        signingConfig = signingConfigs.getByName("release")
+        isMinifyEnabled = false
+        isShrinkResources = false
     }
+}
+
 
 }
 

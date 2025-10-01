@@ -42,7 +42,7 @@ class ContactsScreen extends StatelessWidget {
               },
             ),
           ),
-          const Spacer(), // <-- pushes logo to bottom
+          // <-- pushes logo to bottom
           Padding(
             padding: const EdgeInsets.only(bottom: 20),
             child: Image.asset(
