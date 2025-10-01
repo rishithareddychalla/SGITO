@@ -19,11 +19,12 @@ import 'emergency_contacts.dart';
 // --- State Management ---
 
 final sequentialCallProvider =
-    StateNotifierProvider<SequentialCallNotifier, List<String>>((ref) {
-      return SequentialCallNotifier();
-    });
+    StateNotifierProvider<SequentialCallNotifier, List<Map<String, String>>>(
+        (ref) {
+  return SequentialCallNotifier();
+});
 
-class SequentialCallNotifier extends StateNotifier<List<String>> {
+class SequentialCallNotifier extends StateNotifier<List<Map<String, String>>> {
   StreamSubscription<PhoneState>? _callStateSubscription;
   int _currentIndex = 0;
   bool _isCalling = false;
@@ -32,9 +33,9 @@ class SequentialCallNotifier extends StateNotifier<List<String>> {
 
   SequentialCallNotifier() : super([]);
 
-  void startSOS(List<String> numbers) {
-    if (numbers.isEmpty) return;
-    state = List.from(numbers);
+  void startSOS(List<Map<String, String>> contacts) {
+    if (contacts.isEmpty) return;
+    state = List.from(contacts);
     _currentIndex = 0;
     _listenToCallStates();
     _callCurrentNumber();
@@ -46,7 +47,7 @@ class SequentialCallNotifier extends StateNotifier<List<String>> {
       return;
     }
 
-    final numberToCall = state[_currentIndex];
+    final numberToCall = state[_currentIndex]['phone']!;
     debugPrint('📞 Attempting to call number: $numberToCall');
     try {
       _isCalling = true;
@@ -59,7 +60,7 @@ class SequentialCallNotifier extends StateNotifier<List<String>> {
   }
 
   void _advanceToNext() {
-    debugPrint('✅ Call finished with ${state[_currentIndex]}');
+    debugPrint('✅ Call finished with ${state[_currentIndex]['name']}');
     _isCalling = false;
     _currentIndex++;
 
@@ -184,8 +185,6 @@ class MainScreen extends ConsumerWidget {
   }
 
   Future<void> _handleSOS(BuildContext context, WidgetRef ref) async {
-    final phoneNumbers = emergencyContacts.map((c) => c['phone']!).toList();
-
     final hasPermissions = await _requestPermissions(context);
     if (!hasPermissions) return;
 
@@ -195,12 +194,13 @@ class MainScreen extends ConsumerWidget {
           "Emergency! I need help. My current location is: https://www.google.com/maps/search/?api=1&query=${position.latitude},${position.longitude}";
 
       final telephony = Telephony.instance;
-      for (var number in phoneNumbers) {
-        await telephony.sendSms(to: number, message: locationMessage);
+      for (var contact in emergencyContacts) {
+        await telephony.sendSms(
+            to: contact['phone']!, message: locationMessage);
       }
 
       // Start the sequential caller
-      ref.read(sequentialCallProvider.notifier).startSOS(phoneNumbers);
+      ref.read(sequentialCallProvider.notifier).startSOS(emergencyContacts);
 
       // NOW that all the work has started, navigate to the calling screen.
       if (context.mounted) {
