@@ -26,28 +26,26 @@ final sequentialCallProvider =
 
 class SequentialCallNotifier extends StateNotifier<List<Map<String, String>>> {
   StreamSubscription<PhoneState>? _callStateSubscription;
-  int _currentIndex = 0;
   bool _isCalling = false;
   bool _wasInCall = false;
-  Timer? _nextCallTimer; // <-- add this
+  Timer? _nextCallTimer;
 
   SequentialCallNotifier() : super([]);
 
   void startSOS(List<Map<String, String>> contacts) {
     if (contacts.isEmpty) return;
     state = List.from(contacts);
-    _currentIndex = 0;
     _listenToCallStates();
     _callCurrentNumber();
   }
 
   void _callCurrentNumber() async {
-    if (_currentIndex >= state.length) {
+    if (state.isEmpty) {
       stopSOS();
       return;
     }
 
-    final numberToCall = state[_currentIndex]['phone']!;
+    final numberToCall = state.first['phone']!;
     debugPrint('📞 Attempting to call number: $numberToCall');
     try {
       _isCalling = true;
@@ -60,11 +58,17 @@ class SequentialCallNotifier extends StateNotifier<List<Map<String, String>>> {
   }
 
   void _advanceToNext() {
-    debugPrint('✅ Call finished with ${state[_currentIndex]['name']}');
+    debugPrint('✅ Call finished with ${state.first['name']}');
     _isCalling = false;
-    _currentIndex++;
 
-    if (_currentIndex < state.length) {
+    // Remove the contact that was just called
+    final updatedContacts = List<Map<String, String>>.from(state);
+    if (updatedContacts.isNotEmpty) {
+      updatedContacts.removeAt(0);
+    }
+    state = updatedContacts;
+
+    if (state.isNotEmpty) {
       debugPrint('➡️ Moving to next number in 2 seconds...');
       _nextCallTimer = Timer(const Duration(seconds: 2), _callCurrentNumber);
     } else {
@@ -96,7 +100,6 @@ class SequentialCallNotifier extends StateNotifier<List<Map<String, String>>> {
     _callStateSubscription?.cancel();
     _nextCallTimer?.cancel(); // <-- cancel future scheduled calls
     state = [];
-    _currentIndex = 0;
     _isCalling = false;
     _wasInCall = false;
   }
