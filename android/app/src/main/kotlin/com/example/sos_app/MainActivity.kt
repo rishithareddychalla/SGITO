@@ -1,4 +1,4 @@
-package com.beep.sos
+package com.sgitosuhrd.user
 
 import io.flutter.embedding.android.FlutterActivity
 
